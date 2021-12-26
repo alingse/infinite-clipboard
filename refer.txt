@@ -5,3 +5,13 @@ https://blog.logrocket.com/dart-flutter-data-structures-comprehensive-guide/
 https://docs.flutter.dev/cookbook/persistence/sqlite
 https://petercoding.com/flutter/2021/03/21/using-sqlite-in-flutter/
 https://stackoverflow.com/questions/54223929/how-to-do-a-database-query-with-sqflite-in-flutter
+https://petercoding.com/flutter/2021/03/21/using-sqlite-in-flutter/
+https://stackoverflow.com/questions/20716978/how-to-do-integer-division-in-dart
+https://github.com/tekartik/sqflite/blob/master/sqflite/doc/troubleshooting.md#missingpluginexception
+https://github.com/tekartik/sqflite/blob/master/sqflite/doc/troubleshooting.md
+https://stackoverflow.com/questions/62890116/missingpluginexceptionno-implementation-found-for-method-getdatabasespath-on-c
+https://docs.flutter.dev/testing/debugging
+https://docs.flutter.dev/get-started/flutter-for/android-devs
+https://pub.dev/packages/sqflite
+https://stackoverflow.com/questions/54223929/how-to-do-a-database-query-with-sqflite-in-flutter
+https://ptyagicodecamp.github.io/dart-enums.html

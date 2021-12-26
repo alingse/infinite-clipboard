@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:infclip/clip.dart';
+import 'package:infclip/model.dart';
+
 void main() {
   runApp(const ClipApp());
 }
@@ -29,11 +32,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _count = 0;
+  late DatabaseHandler handler;
+  late ClipCtrl clipCtrl;
 
-  void onResult(int count) {
+  int _count = 0;
+  List<ContentItem> _items = [];
+
+  Future<void> loadResult() async {
+    List<ContentItem> items = await handler.queryItems();
     setState(() {
-      _count = count;
+      _count = items.length * 2;
+      _items = items;
+    });
+  }
+
+  Future<void> addDemoItems() async {
+    ContentItem item =
+        ContentItem(content: "repeat item", contentType: contentTypeEnumText);
+    await handler.saveItem(item);
+    await handler.saveItem(item);
+    await handler.saveItem(item);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    handler = DatabaseHandler();
+    handler.initializeDB().whenComplete(() async {
+      await addDemoItems();
+      await loadResult();
     });
   }
 
@@ -53,9 +80,12 @@ class _HomePageState extends State<HomePage> {
         itemCount: _count,
         itemBuilder: (context, i) {
           if (i.isOdd) return const Divider();
+          int index = (i / 2).ceil();
+          ContentItem item = _items[index];
+          String content = item.id.toString() + ":" + item.content;
           return RichText(
               text: TextSpan(
-                  text: '$i', style: Theme.of(context).textTheme.headline4));
+                  text: content, style: Theme.of(context).textTheme.headline4));
         });
   }
 }
