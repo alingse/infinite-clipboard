@@ -15,3 +15,4 @@ https://docs.flutter.dev/get-started/flutter-for/android-devs
 https://pub.dev/packages/sqflite
 https://stackoverflow.com/questions/54223929/how-to-do-a-database-query-with-sqflite-in-flutter
 https://ptyagicodecamp.github.io/dart-enums.html
+https://stackoverflow.com/questions/14946012/how-do-i-run-a-reoccurring-function-in-dart

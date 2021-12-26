@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-
 import 'package:infclip/clip.dart';
 import 'package:infclip/model.dart';
 
 void main() {
+  ClipCtrl clipCtrl = ClipCtrl();
+  Timer.periodic(
+      const Duration(milliseconds: 50), (Timer t) => {clipCtrl.loadAndSave()});
   runApp(const ClipApp());
 }
 
@@ -17,7 +20,7 @@ class ClipApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'Infinite Clipboard Home Page'),
+      home: const HomePage(title: 'Infinite Clipboard'),
     );
   }
 }
@@ -46,21 +49,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> addDemoItems() async {
-    ContentItem item =
-        ContentItem(content: "repeat item", contentType: contentTypeEnumText);
-    await handler.saveItem(item);
-    await handler.saveItem(item);
-    await handler.saveItem(item);
-  }
-
   @override
   void initState() {
     super.initState();
     handler = DatabaseHandler();
     handler.initializeDB().whenComplete(() async {
-      await addDemoItems();
-      await loadResult();
+      loadResult();
+      //Timer.periodic(
+      // const Duration(milliseconds: 100), (Timer t) => {loadResult()});
     });
   }
 

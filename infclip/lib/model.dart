@@ -45,6 +45,6 @@ class DatabaseHandler {
   Future<List<ContentItem>> queryItems() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.query('contents');
-    return queryResult.map((e) => ContentItem.fromMap(e)).toList();
+    return queryResult.reversed.map((e) => ContentItem.fromMap(e)).toList();
   }
 }
