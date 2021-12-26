@@ -1,0 +1,7 @@
+https://www.jianshu.com/p/d151865c5a67
+https://book.flutterchina.club/chapter6/listview.html
+https://stackoverflow.com/questions/65786913/check-if-listview-builder-returns-only-empty-containers/65787222
+https://blog.logrocket.com/dart-flutter-data-structures-comprehensive-guide/
+https://docs.flutter.dev/cookbook/persistence/sqlite
+https://petercoding.com/flutter/2021/03/21/using-sqlite-in-flutter/
+https://stackoverflow.com/questions/54223929/how-to-do-a-database-query-with-sqflite-in-flutter
