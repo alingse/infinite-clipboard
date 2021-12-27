@@ -10,7 +10,7 @@ class ClipCtrl {
   ClipCtrl() {
     handler = DatabaseHandler();
     timer = Timer.periodic(
-        const Duration(milliseconds: 50), (Timer t) => {loadAndSave()});
+        const Duration(milliseconds: 300), (Timer t) => {loadAndSave()});
   }
 
   Future<ContentItem?> getClipBoardData() async {

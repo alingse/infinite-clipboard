@@ -31,6 +31,8 @@ class ContentItem {
 }
 
 class DatabaseHandler {
+  int duplLimit = 3;
+
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
@@ -46,14 +48,16 @@ class DatabaseHandler {
 
   Future<void> saveItem(ContentItem item) async {
     final Database db = await initializeDB();
-    var rows = await db.query('contents', orderBy: "id DESC", limit: 3);
-    for (var row in rows) {
-      if (ContentItem.fromMap(row).content == item.content) {
-        print(row);
-        return;
+    await db.transaction((txn) async {
+      var rows =
+          await txn.query('contents', orderBy: "id DESC", limit: duplLimit);
+      for (var row in rows) {
+        if (ContentItem.fromMap(row).content == item.content) {
+          return;
+        }
       }
-    }
-    await db.insert('contents', item.toMap());
+      await txn.insert('contents', item.toMap());
+    });
   }
 
   Future<List<ContentItem>> queryItems() async {
