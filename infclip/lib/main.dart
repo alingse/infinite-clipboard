@@ -4,9 +4,6 @@ import 'package:infclip/clip.dart';
 import 'package:infclip/model.dart';
 
 void main() {
-  ClipCtrl clipCtrl = ClipCtrl();
-  Timer.periodic(
-      const Duration(milliseconds: 50), (Timer t) => {clipCtrl.loadAndSave()});
   runApp(const ClipApp());
 }
 
@@ -39,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   late ClipCtrl clipCtrl;
 
   int _count = 0;
+  Timer? timer;
   List<ContentItem> _items = [];
 
   Future<void> loadResult() async {
@@ -52,11 +50,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    clipCtrl = ClipCtrl();
     handler = DatabaseHandler();
     handler.initializeDB().whenComplete(() async {
       loadResult();
-      //Timer.periodic(
-      // const Duration(milliseconds: 100), (Timer t) => {loadResult()});
+    });
+    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      loadResult();
     });
   }
 

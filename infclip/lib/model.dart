@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -8,7 +11,11 @@ class ContentItem {
   final String content;
   final String contentType;
 
-  ContentItem({this.id, required this.content, required this.contentType});
+  ContentItem(
+    this.id,
+    this.content,
+    this.contentType,
+  );
 
   ContentItem.fromMap(Map<String, dynamic> row)
       : id = row["id"],
@@ -39,6 +46,13 @@ class DatabaseHandler {
 
   Future<void> saveItem(ContentItem item) async {
     final Database db = await initializeDB();
+    var rows = await db.query('contents', orderBy: "id DESC", limit: 3);
+    for (var row in rows) {
+      if (ContentItem.fromMap(row).content == item.content) {
+        print(row);
+        return;
+      }
+    }
     await db.insert('contents', item.toMap());
   }
 
