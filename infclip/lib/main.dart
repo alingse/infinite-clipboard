@@ -15,7 +15,7 @@ class ClipApp extends StatelessWidget {
     return MaterialApp(
       title: 'Infinite Clipboard',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       home: const HomePage(title: 'Infinite Clipboard'),
     );
@@ -78,10 +78,10 @@ class _HomePageState extends State<HomePage> {
           if (i.isOdd) return const Divider();
           int index = (i / 2).ceil();
           ContentItem item = _items[index];
-          String content = item.id.toString() + ":" + item.content;
+          String content = item.id.toString() + ". " + item.content;
           return RichText(
               text: TextSpan(
-                  text: content, style: Theme.of(context).textTheme.headline4));
+                  text: content, style: Theme.of(context).textTheme.headline6));
         });
   }
 }
