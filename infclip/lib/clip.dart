@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:infclip/model.dart';
@@ -9,6 +10,9 @@ class ClipCtrl {
 
   ClipCtrl() {
     handler = DatabaseHandler();
+    handler.initializeDB().whenComplete(() async {
+      log('init db success');
+    });
     timer = Timer.periodic(
         const Duration(milliseconds: 300), (Timer t) => {loadAndSave()});
   }
@@ -28,5 +32,10 @@ class ClipCtrl {
       return;
     }
     handler.saveItem(item);
+  }
+
+  Future<List<ContentItem>> queryItems() async {
+    List<ContentItem> items = await handler.queryItems();
+    return items;
   }
 }

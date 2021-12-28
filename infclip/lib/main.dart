@@ -32,7 +32,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late DatabaseHandler handler;
   late ClipCtrl clipCtrl;
 
   int _count = 0;
@@ -40,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   List<ContentItem> _items = [];
 
   Future<void> loadResult() async {
-    List<ContentItem> items = await handler.queryItems();
+    List<ContentItem> items = await clipCtrl.queryItems();
     setState(() {
       _count = items.length * 2;
       _items = items;
@@ -51,10 +50,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     clipCtrl = ClipCtrl();
-    handler = DatabaseHandler();
-    handler.initializeDB().whenComplete(() async {
-      loadResult();
-    });
     timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       loadResult();
     });
