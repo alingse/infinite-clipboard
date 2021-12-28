@@ -13,8 +13,6 @@ class ClipCtrl {
     handler.initializeDB().whenComplete(() async {
       log('init db success');
     });
-    timer = Timer.periodic(
-        const Duration(milliseconds: 300), (Timer t) => {loadAndSave()});
   }
 
   Future<ContentItem?> getClipBoardData() async {
@@ -31,6 +29,8 @@ class ClipCtrl {
     if (item == null || item.content == "") {
       return;
     }
+    log("try save item");
+    log(item.toString());
     handler.saveItem(item);
   }
 

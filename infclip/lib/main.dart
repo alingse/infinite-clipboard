@@ -1,10 +1,22 @@
 import 'dart:async';
+import 'dart:developer';
+import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter/material.dart';
 import 'package:infclip/clip.dart';
 import 'package:infclip/model.dart';
 
-void main() {
+void main() async {
   runApp(const ClipApp());
+  final loader = await FlutterIsolate.spawn(loadAndSave, "contentItem loader");
+  log(loader.toString());
+}
+
+void loadAndSave(String msg) {
+  final clipCtrl = ClipCtrl();
+  Timer.periodic(const Duration(milliseconds: 300), (t) {
+    log(msg);
+    clipCtrl.loadAndSave();
+  });
 }
 
 class ClipApp extends StatelessWidget {
