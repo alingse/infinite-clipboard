@@ -1,22 +1,31 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:flutter_isolate/flutter_isolate.dart';
+import 'dart:isolate';
+
+import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:infclip/clip.dart';
 import 'package:infclip/model.dart';
 
-void main() async {
-  runApp(const ClipApp());
-  final loader = await FlutterIsolate.spawn(loadAndSave, "contentItem loader");
-  log(loader.toString());
+Future<void> init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final handler = DatabaseHandler();
+  await handler.initializeDB();
 }
 
-void loadAndSave(String msg) {
+void main() async {
+  await init();
+  runApp(const ClipApp());
+  final keepper = IsolateKeepper();
+  keepper.start();
+}
+
+void clipSyncLoop() {
   final clipCtrl = ClipCtrl();
-  Timer.periodic(const Duration(milliseconds: 300), (t) {
-    log(msg);
-    clipCtrl.loadAndSave();
-  });
+  clipCtrl.loadAndSave();
+  //Timer.periodic(const Duration(milliseconds: 300), (t) {
+  //  clipCtrl.loadAndSave();
+  //});
 }
 
 class ClipApp extends StatelessWidget {
@@ -90,5 +99,37 @@ class _HomePageState extends State<HomePage> {
               text: TextSpan(
                   text: content, style: Theme.of(context).textTheme.headline6));
         });
+  }
+}
+
+class IsolateKeepper {
+  late Isolate? _isolate;
+  late ReceivePort _receivePort;
+
+  void start() async {
+    log("start keepper");
+    _receivePort = ReceivePort();
+    _isolate = await Isolate.spawn(_runTimer, _receivePort.sendPort);
+    _receivePort.listen(_handleRecv, onDone: () {
+      log("done!");
+    });
+  }
+
+  static void _runTimer(SendPort sendPort) async {
+    clipSyncLoop();
+    Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      sendPort.send("ok");
+    });
+  }
+
+  void _handleRecv(dynamic data) {
+    log('RECEIVED: ' + data);
+  }
+
+  void stop() {
+    if (_isolate != null) {
+      _receivePort.close();
+      _isolate!.kill(priority: Isolate.immediate);
+    }
   }
 }

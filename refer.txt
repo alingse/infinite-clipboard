@@ -37,3 +37,13 @@ https://rodolfohernan20.blogspot.com/2019/12/create-auto-updating-dynamic-listvi
 https://stackoverflow.com/questions/49701654/how-can-i-read-from-disk-and-resize-an-image-in-flutter-dart
 https://docs.flutter.dev/deployment/android
 https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=content_copy&foreground.space.trim=1&foreground.space.pad=0.5&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(180%2C%20240%2C%20220)&crop=0&backgroundShape=square&effects=none&name=infclip
+https://stackoverflow.com/questions/68247450/null-check-operator-used-on-a-null-value-on-flutter-with-sqflite
+https://stackoverflow.com/questions/68247450/null-check-operator-used-on-a-null-value-on-flutter-with-sqflite
+https://flutter.cn/docs/cookbook/persistence/sqlite
+https://stackoverflow.com/questions/53392726/flutter-cant-read-from-clipboard
+https://api.flutter.dev/flutter/dart-isolate/dart-isolate-library.html
+https://flutter.cn/docs/cookbook/persistence/sqlite
+https://stackoverflow.com/questions/64278595/null-check-operator-used-on-a-null-value
+https://database.51cto.com/art/201908/601243.htm
+https://gist.github.com/jebright/a7086adc305615aa3a655c6d8bd90264
+https://medium.com/flutter-community/thread-and-isolate-with-flutter-30b9631137f3

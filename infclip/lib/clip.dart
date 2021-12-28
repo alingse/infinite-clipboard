@@ -10,13 +10,13 @@ class ClipCtrl {
 
   ClipCtrl() {
     handler = DatabaseHandler();
-    handler.initializeDB().whenComplete(() async {
-      log('init db success');
-    });
   }
 
   Future<ContentItem?> getClipBoardData() async {
+    log("start read");
     ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
+    log("after read");
+    log(data.toString());
     if (data != null && data.text != null) {
       String content = data.text!;
       return ContentItem(null, content, contentTypeEnumText);

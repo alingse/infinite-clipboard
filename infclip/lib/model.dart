@@ -43,6 +43,7 @@ class DatabaseHandler {
         );
       },
       version: 1,
+      singleInstance: false,
     );
   }
 
