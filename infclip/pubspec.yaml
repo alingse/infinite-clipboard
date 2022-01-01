@@ -37,6 +37,7 @@ dependencies:
   path: ^1.8.0
   sqflite: ^2.0.1
   flutter_launcher_icons: ^0.9.2
+  flutter_background_service: ^0.1.7
 
 dev_dependencies:
   flutter_test:
