@@ -6,17 +6,13 @@ import 'package:infclip/model.dart';
 
 class ClipCtrl {
   late DatabaseHandler handler;
-  Timer? timer;
 
   ClipCtrl() {
     handler = DatabaseHandler();
   }
 
   Future<ContentItem?> getClipBoardData() async {
-    log("start read");
     ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-    log("after read");
-    log(data.toString());
     if (data != null && data.text != null) {
       String content = data.text!;
       return ContentItem(null, content, contentTypeEnumText);
@@ -29,8 +25,6 @@ class ClipCtrl {
     if (item == null || item.content == "") {
       return;
     }
-    log("try save item");
-    log(item.toString());
     handler.saveItem(item);
   }
 
