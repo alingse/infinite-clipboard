@@ -1,21 +1,52 @@
-/*
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+
 import 'package:infclip/clip.dart';
 import 'package:infclip/model.dart';
 
-Future<void> init() async {
+void init() {
   WidgetsFlutterBinding.ensureInitialized();
   final handler = DatabaseHandler();
-  await handler.initializeDB();
+  handler.initializeDB();
 }
 
-void main() async {
-  await init();
+void main() {
+  init();
+  FlutterBackgroundService.initialize(clipLoop);
+
   runApp(const ClipApp());
+}
+
+void clipLoop() {
+  init();
+
+  final service = FlutterBackgroundService();
+
+  service.onDataReceived.listen((event) {
+    log(event.toString());
+  });
+
+  // bring to foreground
+  service.setForegroundMode(true);
+  var count = 0;
+  Timer.periodic(const Duration(seconds: 1), (timer) async {
+    // if (!(await service.isServiceRunning())) timer.cancel();
+    count += 1;
+    // ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
+    service.setNotificationInfo(
+      title: "+infclip keep Listening clipboard",
+      content: "runing at ${DateTime.now()}",
+    );
+
+    service.sendData({
+      "success": count,
+    });
+  });
 }
 
 class ClipApp extends StatelessWidget {
@@ -47,6 +78,7 @@ class _HomePageState extends State<HomePage> {
 
   Timer? timer;
   Timer? clipTimer;
+
   int _count = 0;
   List<ContentItem> _items = [];
 
@@ -62,10 +94,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     clipCtrl = ClipCtrl();
-    clipTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
-      clipCtrl.loadAndSave();
+    clipTimer =
+        Timer.periodic(const Duration(milliseconds: 300), (timer) async {
+      // await clipCtrl.loadAndSave();
     });
-    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+
+    timer = Timer.periodic(const Duration(milliseconds: 120), (timer) {
       loadResult();
     });
   }
@@ -76,7 +110,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: _buildItems(),
+      body: _build(context),
     );
   }
 
@@ -94,129 +128,26 @@ class _HomePageState extends State<HomePage> {
                   text: content, style: Theme.of(context).textTheme.headline6));
         });
   }
-}
-*/
 
-import 'dart:async';
+  Widget _build(BuildContext context) {
+    return Column(
+      children: [
+        StreamBuilder<Map<String, dynamic>?>(
+          stream: FlutterBackgroundService().onDataReceived,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
+            clipCtrl.loadAndSave();
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  FlutterBackgroundService.initialize(onStart);
-
-  runApp(MyApp());
-}
-
-void onStart() {
-  WidgetsFlutterBinding.ensureInitialized();
-  final service = FlutterBackgroundService();
-  service.onDataReceived.listen((event) {
-    if (event!["action"] == "setAsForeground") {
-      service.setForegroundMode(true);
-      return;
-    }
-
-    if (event["action"] == "setAsBackground") {
-      service.setForegroundMode(false);
-    }
-
-    if (event["action"] == "stopService") {
-      service.stopBackgroundService();
-    }
-  });
-
-  // bring to foreground
-  service.setForegroundMode(true);
-  Timer.periodic(Duration(seconds: 1), (timer) async {
-    if (!(await service.isServiceRunning())) timer.cancel();
-    service.setNotificationInfo(
-      title: "My App Service",
-      content: "Updated at ${DateTime.now()}",
-    );
-
-    service.sendData(
-      {"current_date": DateTime.now().toIso8601String()},
-    );
-  });
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String text = "Stop Service";
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Service App'),
-        ),
-        body: Column(
-          children: [
-            StreamBuilder<Map<String, dynamic>?>(
-              stream: FlutterBackgroundService().onDataReceived,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                final data = snapshot.data!;
-                DateTime? date = DateTime.tryParse(data["current_date"]);
-                return Text(date.toString());
-              },
-            ),
-            ElevatedButton(
-              child: Text("Foreground Mode"),
-              onPressed: () {
-                FlutterBackgroundService()
-                    .sendData({"action": "setAsForeground"});
-              },
-            ),
-            ElevatedButton(
-              child: Text("Background Mode"),
-              onPressed: () {
-                FlutterBackgroundService()
-                    .sendData({"action": "setAsBackground"});
-              },
-            ),
-            ElevatedButton(
-              child: Text(text),
-              onPressed: () async {
-                var isRunning =
-                    await FlutterBackgroundService().isServiceRunning();
-                if (isRunning) {
-                  FlutterBackgroundService().sendData(
-                    {"action": "stopService"},
-                  );
-                } else {
-                  FlutterBackgroundService.initialize(onStart);
-                }
-                if (!isRunning) {
-                  text = 'Stop Service';
-                } else {
-                  text = 'Start Service';
-                }
-                setState(() {});
-              },
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            FlutterBackgroundService().sendData({
-              "hello": "world",
-            });
+            final data = snapshot.data!;
+            return Text(data.toString());
           },
-          child: Icon(Icons.play_arrow),
         ),
-      ),
+      ],
     );
   }
 }
