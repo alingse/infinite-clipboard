@@ -75,6 +75,7 @@ class _MyAppState extends State<MyApp> {
           ],
           supportedLocales: const [
             Locale('en', ''),
+            Locale('zh-Hans-CN', ''),
           ],
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,

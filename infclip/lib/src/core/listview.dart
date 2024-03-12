@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../db/database_helper.dart';
 import '../settings/settings_view.dart';
@@ -59,9 +61,10 @@ class _ItemListViewState extends State<ItemListView> {
 
   @override
   Widget build(BuildContext context) {
+    final title = AppLocalizations.of(context)!.appTitle;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sample Items'),
+        title: Text(title),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
