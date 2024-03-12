@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import '../db/database_helper.dart';
+import '../model/record.dart';
 
-class SampleItemDetailsView extends StatelessWidget {
-  const SampleItemDetailsView({
+class ItemDetailsView extends StatelessWidget {
+  const ItemDetailsView({
     super.key,
     required this.id,
   });
 
   final int id;
-  static const routeName = '/sample_item';
+  static const routeName = '/itemdetail';
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: DatabaseHelper.getItemById(id),
+    return FutureBuilder<Record?>(
+      future: DatabaseProvider.getRecordByID(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          final data = snapshot.data?['data'];
+          final data = snapshot.data?.content ?? '';
           return Scaffold(
             appBar: AppBar(
               title: Text('ID Details: $id'),
